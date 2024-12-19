@@ -1,0 +1,79 @@
+From 2e6a3772a54f37c5dcbaa4a37c737fab611a29e9 Mon Sep 17 00:00:00 2001
+From: jjm2473 <jjm2473@gmail.com>
+Date: Thu, 19 Dec 2024 11:17:37 +0800
+Subject: [PATCH] netfilter: nft_masq: supports brcm fullcone flag
+
+---
+ include/uapi/linux/netfilter/nf_tables.h | 2 ++
+ net/netfilter/nft_masq.c                 | 9 +++++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/include/uapi/linux/netfilter/nf_tables.h b/include/uapi/linux/netfilter/nf_tables.h
+index 98272cb5f..aa7b3aedc 100644
+--- a/include/uapi/linux/netfilter/nf_tables.h
++++ b/include/uapi/linux/netfilter/nf_tables.h
+@@ -1384,12 +1384,14 @@ enum nft_tproxy_attributes {
+  * @NFTA_MASQ_FLAGS: NAT flags (see NF_NAT_RANGE_* in linux/netfilter/nf_nat.h) (NLA_U32)
+  * @NFTA_MASQ_REG_PROTO_MIN: source register of proto range start (NLA_U32: nft_registers)
+  * @NFTA_MASQ_REG_PROTO_MAX: source register of proto range end (NLA_U32: nft_registers)
++ * @NFTA_MASQ_REG_FULLCONE: fullcone NAT (NLA_U8)
+  */
+ enum nft_masq_attributes {
+ 	NFTA_MASQ_UNSPEC,
+ 	NFTA_MASQ_FLAGS,
+ 	NFTA_MASQ_REG_PROTO_MIN,
+ 	NFTA_MASQ_REG_PROTO_MAX,
++	NFTA_MASQ_REG_FULLCONE,
+ 	__NFTA_MASQ_MAX
+ };
+ #define NFTA_MASQ_MAX		(__NFTA_MASQ_MAX - 1)
+diff --git a/net/netfilter/nft_masq.c b/net/netfilter/nft_masq.c
+index 1818dbf08..4d1758023 100644
+--- a/net/netfilter/nft_masq.c
++++ b/net/netfilter/nft_masq.c
+@@ -17,12 +17,14 @@ struct nft_masq {
+ 	u32			flags;
+ 	u8			sreg_proto_min;
+ 	u8			sreg_proto_max;
++	bool		fullcone;
+ };
+ 
+ static const struct nla_policy nft_masq_policy[NFTA_MASQ_MAX + 1] = {
+ 	[NFTA_MASQ_FLAGS]		= { .type = NLA_U32 },
+ 	[NFTA_MASQ_REG_PROTO_MIN]	= { .type = NLA_U32 },
+ 	[NFTA_MASQ_REG_PROTO_MAX]	= { .type = NLA_U32 },
++	[NFTA_MASQ_REG_FULLCONE]	= { .type = NLA_U8 },
+ };
+ 
+ static int nft_masq_validate(const struct nft_ctx *ctx,
+@@ -69,6 +71,8 @@ static int nft_masq_init(const struct nft_ctx *ctx,
+ 			priv->sreg_proto_max = priv->sreg_proto_min;
+ 		}
+ 	}
++	if (tb[NFTA_MASQ_REG_FULLCONE])
++		priv->fullcone = nla_get_u8(tb[NFTA_MASQ_REG_FULLCONE]);
+ 
+ 	return nf_ct_netns_get(ctx->net, ctx->family);
+ }
+@@ -88,6 +92,8 @@ static int nft_masq_dump(struct sk_buff *skb, const struct nft_expr *expr)
+ 				      priv->sreg_proto_max))
+ 			goto nla_put_failure;
+ 	}
++	if (priv->fullcone && nla_put_u8(skb, NFTA_MASQ_REG_FULLCONE, 1))
++		goto nla_put_failure;
+ 
+ 	return 0;
+ 
+@@ -110,6 +116,9 @@ static void nft_masq_ipv4_eval(const struct nft_expr *expr,
+ 		range.max_proto.all = (__force __be16)nft_reg_load16(
+ 			&regs->data[priv->sreg_proto_max]);
+ 	}
++	if (priv->fullcone) {
++		range.min_addr.ip = 1;
++	}
+ 	regs->verdict.code = nf_nat_masquerade_ipv4(pkt->skb, nft_hook(pkt),
+ 						    &range, nft_out(pkt));
+ }
+-- 
+2.46.0
+

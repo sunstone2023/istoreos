@@ -1,0 +1,113 @@
+From d595dbff625ab2e48ee03a565fd3e0c8b6ed40dc Mon Sep 17 00:00:00 2001
+From: Liangbin Lian <jjm2473@gmail.com>
+Date: Wed, 18 Dec 2024 21:56:08 +0800
+Subject: [PATCH] expr: masq: supports fullcone flag
+
+---
+ include/libnftnl/expr.h             |  1 +
+ include/linux/netfilter/nf_tables.h |  1 +
+ src/expr/masq.c                     | 22 ++++++++++++++++++++++
+ 3 files changed, 24 insertions(+)
+
+diff --git a/include/libnftnl/expr.h b/include/libnftnl/expr.h
+index 00c63ab..b5f3211 100644
+--- a/include/libnftnl/expr.h
++++ b/include/libnftnl/expr.h
+@@ -242,6 +242,7 @@ enum {
+ 	NFTNL_EXPR_MASQ_FLAGS		= NFTNL_EXPR_BASE,
+ 	NFTNL_EXPR_MASQ_REG_PROTO_MIN,
+ 	NFTNL_EXPR_MASQ_REG_PROTO_MAX,
++	NFTNL_EXPR_MASQ_REG_FULLCONE,
+ };
+ 
+ enum {
+diff --git a/include/linux/netfilter/nf_tables.h b/include/linux/netfilter/nf_tables.h
+index 0ae9120..89caf1c 100644
+--- a/include/linux/netfilter/nf_tables.h
++++ b/include/linux/netfilter/nf_tables.h
+@@ -1429,6 +1429,7 @@ enum nft_masq_attributes {
+ 	NFTA_MASQ_FLAGS,
+ 	NFTA_MASQ_REG_PROTO_MIN,
+ 	NFTA_MASQ_REG_PROTO_MAX,
++	NFTA_MASQ_REG_FULLCONE,
+ 	__NFTA_MASQ_MAX
+ };
+ #define NFTA_MASQ_MAX		(__NFTA_MASQ_MAX - 1)
+diff --git a/src/expr/masq.c b/src/expr/masq.c
+index 684708c..72c4c9a 100644
+--- a/src/expr/masq.c
++++ b/src/expr/masq.c
+@@ -24,6 +24,7 @@ struct nftnl_expr_masq {
+ 	uint32_t		flags;
+ 	enum nft_registers	sreg_proto_min;
+ 	enum nft_registers	sreg_proto_max;
++	uint8_t			fullcone;
+ };
+ 
+ static int
+@@ -42,6 +43,9 @@ nftnl_expr_masq_set(struct nftnl_expr *e, uint16_t type,
+ 	case NFTNL_EXPR_MASQ_REG_PROTO_MAX:
+ 		memcpy(&masq->sreg_proto_max, data, sizeof(masq->sreg_proto_max));
+ 		break;
++	case NFTNL_EXPR_MASQ_REG_FULLCONE:
++		memcpy(&masq->fullcone, data, sizeof(masq->fullcone));
++		break;
+ 	default:
+ 		return -1;
+ 	}
+@@ -64,6 +68,9 @@ nftnl_expr_masq_get(const struct nftnl_expr *e, uint16_t type,
+ 	case NFTNL_EXPR_MASQ_REG_PROTO_MAX:
+ 		*data_len = sizeof(masq->sreg_proto_max);
+ 		return &masq->sreg_proto_max;
++	case NFTNL_EXPR_MASQ_REG_FULLCONE:
++		*data_len = sizeof(masq->fullcone);
++		return &masq->fullcone;
+ 	}
+ 	return NULL;
+ }
+@@ -83,6 +90,10 @@ static int nftnl_expr_masq_cb(const struct nlattr *attr, void *data)
+ 		if (mnl_attr_validate(attr, MNL_TYPE_U32) < 0)
+ 			abi_breakage();
+ 		break;
++	case NFTA_MASQ_REG_FULLCONE:
++		if (mnl_attr_validate(attr, MNL_TYPE_U8) < 0)
++			abi_breakage();
++		break;
+ 	}
+ 
+ 	tb[type] = attr;
+@@ -102,6 +113,8 @@ nftnl_expr_masq_build(struct nlmsghdr *nlh, const struct nftnl_expr *e)
+ 	if (e->flags & (1 << NFTNL_EXPR_MASQ_REG_PROTO_MAX))
+ 		mnl_attr_put_u32(nlh, NFTA_MASQ_REG_PROTO_MAX,
+ 				 htobe32(masq->sreg_proto_max));
++	if (e->flags & (1 << NFTNL_EXPR_MASQ_REG_FULLCONE))
++		mnl_attr_put_u8(nlh, NFTA_MASQ_REG_FULLCONE, masq->fullcone);
+ }
+ 
+ static int
+@@ -127,6 +140,10 @@ nftnl_expr_masq_parse(struct nftnl_expr *e, struct nlattr *attr)
+ 			be32toh(mnl_attr_get_u32(tb[NFTA_MASQ_REG_PROTO_MAX]));
+ 		e->flags |= (1 << NFTNL_EXPR_MASQ_REG_PROTO_MAX);
+ 	}
++	if (tb[NFTA_MASQ_REG_FULLCONE]) {
++		masq->fullcone = mnl_attr_get_u8(tb[NFTA_MASQ_REG_FULLCONE]);
++		e->flags |= (1 << NFTNL_EXPR_MASQ_REG_FULLCONE);
++	}
+ 
+ 	return 0;
+ }
+@@ -147,6 +164,11 @@ static int nftnl_expr_masq_snprintf(char *buf, size_t remain,
+ 			       masq->sreg_proto_max);
+ 		SNPRINTF_BUFFER_SIZE(ret, remain, offset);
+ 	}
++	if (e->flags & (1 << NFTNL_EXPR_MASQ_REG_FULLCONE)) {
++		ret = snprintf(buf + offset, remain, "fullcone reg %u ",
++			       masq->fullcone);
++		SNPRINTF_BUFFER_SIZE(ret, remain, offset);
++	}
+ 	if (e->flags & (1 << NFTNL_EXPR_MASQ_FLAGS)) {
+ 		ret = snprintf(buf + offset, remain, "flags 0x%x ", masq->flags);
+ 		SNPRINTF_BUFFER_SIZE(ret, remain, offset);
+-- 
+2.46.0
+

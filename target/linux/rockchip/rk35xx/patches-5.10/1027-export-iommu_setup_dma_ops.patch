@@ -1,0 +1,24 @@
+From 2f679264ca2dc5e9b34e4690740490b52f1f21a8 Mon Sep 17 00:00:00 2001
+From: jjm2473 <jjm2473@gmail.com>
+Date: Wed, 12 Feb 2025 12:00:55 +0800
+Subject: [PATCH] dma-iommu: export iommu_setup_dma_ops
+
+---
+ drivers/iommu/dma-iommu.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index b6452257d..10ed1b8ff 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -1243,6 +1243,7 @@ void iommu_setup_dma_ops(struct device *dev, u64 dma_base, u64 size)
+ 	 pr_warn("Failed to set up IOMMU for device %s; retaining platform DMA ops\n",
+ 		 dev_name(dev));
+ }
++EXPORT_SYMBOL_GPL(iommu_setup_dma_ops);
+ 
+ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
+ 		phys_addr_t msi_addr, struct iommu_domain *domain)
+-- 
+2.46.0
+

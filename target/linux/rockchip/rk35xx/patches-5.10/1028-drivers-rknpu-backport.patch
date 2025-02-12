@@ -1,0 +1,206 @@
+From e16a5515f68cced6b8f54880bc3bd22702a0528a Mon Sep 17 00:00:00 2001
+From: jjm2473 <jjm2473@gmail.com>
+Date: Tue, 11 Feb 2025 13:51:29 +0800
+Subject: [PATCH] drivers/rknpu: backport to 5.10
+
+---
+ drivers/rknpu/rknpu_devfreq.c |  8 ++++----
+ drivers/rknpu/rknpu_drv.c     | 10 ++++++++++
+ drivers/rknpu/rknpu_gem.c     | 23 +++++++++++++++++++++++
+ 3 files changed, 37 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/rknpu/rknpu_devfreq.c b/drivers/rknpu/rknpu_devfreq.c
+index 2668d2c46..ea717dde2 100644
+--- a/drivers/rknpu/rknpu_devfreq.c
++++ b/drivers/rknpu/rknpu_devfreq.c
+@@ -19,7 +19,7 @@ static int npu_devfreq_target(struct device *dev, unsigned long *freq,
+ 			      u32 flags);
+ 
+ static struct monitor_dev_profile npu_mdevp = {
+-	.type = MONITOR_TYPE_DEV,
++	.type = MONITOR_TPYE_DEV,
+ 	.low_temp_adjust = rockchip_monitor_dev_low_temp_adjust,
+ 	.high_temp_adjust = rockchip_monitor_dev_high_temp_adjust,
+ #if KERNEL_VERSION(6, 1, 0) <= LINUX_VERSION_CODE
+@@ -395,7 +395,7 @@ int rknpu_devfreq_init(struct rknpu_device *rknpu_dev)
+ err_remove_governor:
+ 	devfreq_remove_governor(&devfreq_rknpu_ondemand);
+ err_uinit_table:
+-#if KERNEL_VERSION(5, 10, 198) <= LINUX_VERSION_CODE
++#if KERNEL_VERSION(6, 1, 0) <= LINUX_VERSION_CODE
+ 	rockchip_uninit_opp_table(dev, info);
+ #else
+ 	dev_pm_opp_of_remove_table(dev);
+@@ -733,7 +733,7 @@ int rknpu_devfreq_init(struct rknpu_device *rknpu_dev)
+ err_remove_governor:
+ 	devfreq_remove_governor(&devfreq_rknpu_ondemand);
+ err_remove_table:
+-#if KERNEL_VERSION(5, 10, 198) <= LINUX_VERSION_CODE
++#if KERNEL_VERSION(6, 1, 0) <= LINUX_VERSION_CODE
+ 	rockchip_uninit_opp_table(dev, &rknpu_dev->opp_info);
+ #else
+ 	dev_pm_opp_of_remove_table(dev);
+@@ -798,7 +798,7 @@ void rknpu_devfreq_remove(struct rknpu_device *rknpu_dev)
+ 	}
+ 	if (rknpu_dev->devfreq)
+ 		devfreq_remove_governor(&devfreq_rknpu_ondemand);
+-#if KERNEL_VERSION(5, 10, 198) <= LINUX_VERSION_CODE
++#if KERNEL_VERSION(6, 1, 0) <= LINUX_VERSION_CODE
+ 	rockchip_uninit_opp_table(rknpu_dev->dev, &rknpu_dev->opp_info);
+ #else
+ 	dev_pm_opp_of_remove_table(rknpu_dev->dev);
+diff --git a/drivers/rknpu/rknpu_drv.c b/drivers/rknpu/rknpu_drv.c
+index e8afa9778..25fa35aec 100644
+--- a/drivers/rknpu/rknpu_drv.c
++++ b/drivers/rknpu/rknpu_drv.c
+@@ -108,6 +108,7 @@ static const struct rknpu_amount_data rknpu_core_amount = {
+ 	.offset_wt_rd = 0x243c,
+ };
+ 
++#ifdef CONFIG_CPU_RK3576
+ static void rk3576_state_init(struct rknpu_device *rknpu_dev)
+ {
+ 	void __iomem *rknpu_core_base = rknpu_dev->base[0];
+@@ -158,6 +159,7 @@ static int rk3576_cache_sgt_init(struct rknpu_device *rknpu_dev)
+ 
+ 	return ret;
+ }
++#endif
+ 
+ static const struct rknpu_config rk356x_rknpu_config = {
+ 	.bw_priority_addr = 0xfe180008,
+@@ -243,6 +245,7 @@ static const struct rknpu_config rv1106_rknpu_config = {
+ 	.cache_sgt_init = NULL,
+ };
+ 
++#ifdef CONFIG_CPU_RK3562
+ static const struct rknpu_config rk3562_rknpu_config = {
+ 	.bw_priority_addr = 0x0,
+ 	.bw_priority_length = 0x0,
+@@ -263,7 +266,9 @@ static const struct rknpu_config rk3562_rknpu_config = {
+ 	.state_init = NULL,
+ 	.cache_sgt_init = NULL,
+ };
++#endif
+ 
++#ifdef CONFIG_CPU_RK3576
+ static const struct rknpu_config rk3576_rknpu_config = {
+ 	.bw_priority_addr = 0x0,
+ 	.bw_priority_length = 0x0,
+@@ -284,6 +289,7 @@ static const struct rknpu_config rk3576_rknpu_config = {
+ 	.state_init = rk3576_state_init,
+ 	.cache_sgt_init = rk3576_cache_sgt_init,
+ };
++#endif
+ 
+ /* driver probe and init */
+ static const struct of_device_id rknpu_of_match[] = {
+@@ -303,14 +309,18 @@ static const struct of_device_id rknpu_of_match[] = {
+ 		.compatible = "rockchip,rv1106-rknpu",
+ 		.data = &rv1106_rknpu_config,
+ 	},
++#ifdef CONFIG_CPU_RK3562
+ 	{
+ 		.compatible = "rockchip,rk3562-rknpu",
+ 		.data = &rk3562_rknpu_config,
+ 	},
++#endif
++#ifdef CONFIG_CPU_RK3576
+ 	{
+ 		.compatible = "rockchip,rk3576-rknpu",
+ 		.data = &rk3576_rknpu_config,
+ 	},
++#endif
+ 	{},
+ };
+ 
+diff --git a/drivers/rknpu/rknpu_gem.c b/drivers/rknpu/rknpu_gem.c
+index a5c5354ed..14fdf643b 100644
+--- a/drivers/rknpu/rknpu_gem.c
++++ b/drivers/rknpu/rknpu_gem.c
+@@ -28,6 +28,12 @@
+ #include "rknpu_gem.h"
+ #include "rknpu_iommu.h"
+ 
++#if IS_ENABLED(CONFIG_NO_GKI) && (IS_ENABLED(CONFIG_ROCKCHIP_RKNPU_SRAM) || defined(CONFIG_CPU_RK3562) || defined(CONFIG_CPU_RK3576))
++#define RKNPU_CACHE_SYNC 1
++#else
++#define RKNPU_CACHE_SYNC 0
++#endif
++
+ #define RKNPU_GEM_ALLOC_FROM_PAGES 1
+ 
+ #if RKNPU_GEM_ALLOC_FROM_PAGES
+@@ -995,7 +1001,11 @@ static int rknpu_gem_mmap_pages(struct rknpu_gem_object *rknpu_obj,
+ 	struct drm_device *drm = rknpu_obj->base.dev;
+ 	int ret = -EINVAL;
+ 
++#if KERNEL_VERSION(6, 3, 0) > LINUX_VERSION_CODE
++	vma->vm_flags |= VM_MIXEDMAP;
++#else
+ 	vm_flags_set(vma, VM_MIXEDMAP);
++#endif
+ 
+ 	ret = __vm_map_pages(vma, rknpu_obj->pages, rknpu_obj->num_pages,
+ 			     vma->vm_pgoff);
+@@ -1088,7 +1098,11 @@ static int rknpu_gem_mmap_cache(struct rknpu_gem_object *rknpu_obj,
+ 		return -EINVAL;
+ 	}
+ 
++#if KERNEL_VERSION(6, 3, 0) > LINUX_VERSION_CODE
++	vma->vm_flags |= VM_MIXEDMAP;
++#else
+ 	vm_flags_set(vma, VM_MIXEDMAP);
++#endif
+ 
+ 	vm_size = vma->vm_end - vma->vm_start;
+ 
+@@ -1144,8 +1158,13 @@ static int rknpu_gem_mmap_buffer(struct rknpu_gem_object *rknpu_obj,
+ 	 * vm_pgoff (used as a fake buffer offset by DRM) to 0 as we want to map
+ 	 * the whole buffer.
+ 	 */
++#if KERNEL_VERSION(6, 3, 0) > LINUX_VERSION_CODE
++	vma->vm_flags |= VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP | VM_IO;
++	vma->vm_flags &= ~VM_PFNMAP;
++#else
+ 	vm_flags_set(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP | VM_IO);
+ 	vm_flags_clear(vma, VM_PFNMAP);
++#endif
+ 	vma->vm_pgoff = 0;
+ 
+ 	vm_size = vma->vm_end - vma->vm_start;
+@@ -1530,6 +1549,7 @@ int rknpu_gem_prime_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
+ 	return rknpu_gem_mmap_obj(obj, vma);
+ }
+ 
++#if RKNPU_CACHE_SYNC
+ static int rknpu_cache_sync_with_sg(struct rknpu_device *rknpu_dev,
+ 				    struct rknpu_gem_object *rknpu_obj,
+ 				    unsigned long *length,
+@@ -1663,6 +1683,7 @@ static int rknpu_cache_sync(struct rknpu_gem_object *rknpu_obj,
+ 
+ 	return 0;
+ }
++#endif
+ 
+ int rknpu_gem_sync_ioctl(struct drm_device *dev, void *data,
+ 			 struct drm_file *file_priv)
+@@ -1708,6 +1729,7 @@ int rknpu_gem_sync_ioctl(struct drm_device *dev, void *data,
+ 		length = args->size;
+ 		offset = args->offset;
+ 
++#if RKNPU_CACHE_SYNC
+ 		if (IS_ENABLED(CONFIG_NO_GKI) &&
+ 		    IS_ENABLED(CONFIG_ROCKCHIP_RKNPU_SRAM) &&
+ 		    rknpu_obj->sram_size > 0) {
+@@ -1718,6 +1740,7 @@ int rknpu_gem_sync_ioctl(struct drm_device *dev, void *data,
+ 			rknpu_cache_sync(rknpu_obj, &length, &offset,
+ 					 RKNPU_CACHE_NBUF, args->flags);
+ 		}
++#endif
+ 
+ 		for_each_sg(rknpu_obj->sgt->sgl, sg, rknpu_obj->sgt->nents, i) {
+ 			if (length == 0)
+-- 
+2.46.0
+

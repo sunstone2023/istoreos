@@ -46,7 +46,7 @@ static int rknpu_load_show(struct seq_file *m, void *data)
 	unsigned long flags;
 	int i;
 	int load;
-	uint64_t busy_time_total, div_value;
+	uint64_t total_busy_time, div_value;
 
 	seq_puts(m, "NPU load: ");
 	for (i = 0; i < rknpu_dev->config->num_irqs; i++) {
@@ -57,13 +57,13 @@ static int rknpu_load_show(struct seq_file *m, void *data)
 
 		spin_lock_irqsave(&rknpu_dev->irq_lock, flags);
 
-		busy_time_total = subcore_data->timer.busy_time_record;
+		total_busy_time = subcore_data->timer.total_busy_time;
 
 		spin_unlock_irqrestore(&rknpu_dev->irq_lock, flags);
 
-		div_value = (RKNPU_LOAD_INTERVAL / 100000);
-		do_div(busy_time_total, div_value);
-		load = busy_time_total;
+		div_value = (RKNPU_LOAD_INTERVAL / 100);
+		do_div(total_busy_time, div_value);
+		load = total_busy_time > 100 ? 100 : total_busy_time;
 
 		if (rknpu_dev->config->num_irqs > 1)
 			seq_printf(m, "%2.d%%,", load);
@@ -457,7 +457,11 @@ CREATE_FAIL:
 #ifdef CONFIG_ROCKCHIP_RKNPU_PROC_FS
 static int rknpu_procfs_open(struct inode *inode, struct file *file)
 {
+#if KERNEL_VERSION(6, 1, 0) > LINUX_VERSION_CODE
 	struct rknpu_debugger_node *node = PDE_DATA(inode);
+#else
+	struct rknpu_debugger_node *node = pde_data(inode);
+#endif
 
 	return single_open(file, node->info_ent->show, node);
 }

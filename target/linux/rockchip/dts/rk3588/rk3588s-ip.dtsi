@@ -1,0 +1,10 @@
+&otp {
+	specification_serial_number: specification-serial-number@6 {
+		reg = <0x06 0x1>;
+		bits = <0 5>;
+	};
+};
+
+#include "rk3588s-vpu.dtsi"
+#include "rk3588s-gpu.dtsi"
+#include "rk3588s-npu.dtsi"

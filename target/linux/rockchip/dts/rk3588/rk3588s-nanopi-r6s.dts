@@ -1,0 +1,9 @@
+/dts-v1/;
+
+#include <rockchip/rk3588s-nanopi-r6s.dts>
+#include "rk3588s-ip.dtsi"
+#include "rk3588s-nanopi-r6-ip.dtsi"
+
+/ {
+	compatible = "friendlyarm,nanopi-r6s", "rockchip,rk3588s", "rockchip,rk3588";
+};

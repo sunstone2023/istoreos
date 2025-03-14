@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mali-drivers
 PKG_VERSION:=24.11.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_HASH:=2fe6146c141639eea4a2625be073387b8de3b8f3d9384ce495c411c7bbd6da61
 PKG_SOURCE_URL_FILE:=v$(PKG_VERSION).tar.gz
@@ -79,7 +79,12 @@ define KernelPackage/rkgpu-bifrost-csf-coex/install
 	$(INSTALL_BIN) ./files/bifrost_csf.init $(1)/etc/init.d/bifrost_csf
 endef
 
-config-y:=
+config-y:= CPU_RK3568 \
+	CPU_RK3588 \
+	CPU_RK3528 \
+	CPU_RK3576 \
+	CPU_RK3562 \
+	CPU_RK3368
 config-m:=
 
 ifeq ($(BUILD_VARIANT),csf)

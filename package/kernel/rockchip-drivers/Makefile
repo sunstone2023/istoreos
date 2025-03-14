@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rockchip-drivers
 PKG_VERSION:=24.11.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_HASH:=948373297ba1aa9d4d1160fdbb738594ef778bb0166837d90f6a8fabdb228f70
 PKG_SOURCE_URL_FILE:=v$(PKG_VERSION).tar.gz
@@ -75,7 +75,12 @@ define KernelPackage/rknpu/description
   Support Rockchip RKNPU
 endef
 
-config-y:=
+config-y:= CPU_RK3568 \
+	CPU_RK3588 \
+	CPU_RK3528 \
+	CPU_RK3576 \
+	CPU_RK3562 \
+	CPU_RK3368
 config-m:=
 
 ifdef CONFIG_PACKAGE_kmod-rga2

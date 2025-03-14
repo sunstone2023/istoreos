@@ -77,6 +77,7 @@ endef
 
 define Device/Legacy
   KERNEL = kernel-bin
+  DEVICE_DTS_DIR := ../dts
   IMAGE/sysupgrade.img.gz = boot-common-legacy | boot-script-legacy $$(BOOT_SCRIPT) | pine64-img | gzip | append-metadata
 endef
 

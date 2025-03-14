@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021 Rockchip Electronics Co., Ltd.
+ * Copyright (c) 2025 jjm2473 <jjm2473@gmail.com>
+ */
+
 &otp {
 	specification_serial_number: specification-serial-number@6 {
 		reg = <0x06 0x1>;

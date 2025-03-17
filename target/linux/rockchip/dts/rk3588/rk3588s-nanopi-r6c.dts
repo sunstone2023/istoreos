@@ -5,5 +5,4 @@
 #include "rk3588s-nanopi-r6-ip.dtsi"
 
 / {
-	compatible = "friendlyarm,nanopi-r6c", "rockchip,rk3588s", "rockchip,rk3588";
 };

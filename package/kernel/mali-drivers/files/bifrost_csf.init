@@ -3,7 +3,7 @@
 START=09
 
 boot() {
-	if grep -qFw rockchip,rk3588 /proc/device-tree/compatible ; then
+	if grep -qFw -e rockchip,rk3588 -e rockchip,rk3588s /proc/device-tree/compatible ; then
 		local kmod
 		local release="$(uname -r)"
 		[[ -n "$release" ]] || return 0

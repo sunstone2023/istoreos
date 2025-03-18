@@ -141,3 +141,10 @@
 
 	status = "okay";
 };
+
+&adc_keys {
+	vol-up-key {
+		label = "recovery";
+		linux,code = <KEY_RESTART>;
+	};
+};

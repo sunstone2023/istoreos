@@ -1,0 +1,32 @@
+/dts-v1/;
+
+#include "rk3566-klan-nas.dtsi"
+
+/ {
+	model = "Klan NAS101";
+	compatible = "klan,nas101", "rockchip,rk3566";
+
+	vcc3v3_m2_sata: vcc3v3-m2-sata {
+		compatible = "regulator-fixed";
+		enable-active-high;
+		gpio = <&gpio0 RK_PC4 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&m2_sata_pwr_en>;
+		regulator-name = "vcc3v3_m2_sata";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		vin-supply = <&vcc5v0_sys>;
+	};
+};
+
+&sata1 {
+	target-supply = <&vcc3v3_m2_sata>;
+};
+
+&pinctrl {
+	sata {
+		m2_sata_pwr_en: m2-sata-pwr-en {
+			rockchip,pins = <0 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+};

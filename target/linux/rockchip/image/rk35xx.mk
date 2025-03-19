@@ -395,6 +395,24 @@ $(call Device/rk3566)
 endef
 TARGET_DEVICES += le_hes30
 
+define Device/klan_nas101
+$(call Device/rk3566)
+  DEVICE_VENDOR := Klan
+  DEVICE_MODEL := NAS 101
+  DEVICE_DTS := rk3566-klan-nas101
+  DEVICE_PACKAGES := kmod-scsi-core
+endef
+TARGET_DEVICES += klan_nas101
+
+define Device/klan_nas102
+$(call Device/rk3566)
+  DEVICE_VENDOR := Klan
+  DEVICE_MODEL := NAS 102
+  DEVICE_DTS := rk3566-klan-nas102
+  DEVICE_PACKAGES := kmod-scsi-core
+endef
+TARGET_DEVICES += klan_nas102
+
 define Device/linkfog_ala2
 $(call Device/rk3568)
   DEVICE_VENDOR := Linkfog

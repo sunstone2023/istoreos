@@ -115,7 +115,7 @@
 		vin-supply = <&vcc5v0_sys>;
 	};
 
-	vcc12v_5v_hdd: vcc3v3-m2-sata {
+	vcc12v_5v_hdd: vcc12v-5v-hdd {
 		compatible = "regulator-fixed";
 		enable-active-high;
 		gpio = <&gpio0 RK_PC1 GPIO_ACTIVE_HIGH>;

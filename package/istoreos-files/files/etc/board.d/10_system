@@ -7,7 +7,11 @@
 
 board_config_update
 
-ucidef_set_hostname "iStoreOS"
+if [ -e /proc/device-tree/chosen/default-hostname ]; then
+	ucidef_set_hostname `cat /proc/device-tree/chosen/default-hostname`
+else
+	ucidef_set_hostname "iStoreOS"
+fi
 
 ucidef_set_ntpserver "0.cn.pool.ntp.org" "1.cn.pool.ntp.org" "2.cn.pool.ntp.org" "3.cn.pool.ntp.org"
 

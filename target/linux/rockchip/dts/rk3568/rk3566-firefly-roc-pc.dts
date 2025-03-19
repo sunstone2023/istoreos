@@ -20,7 +20,7 @@
 
 / {
 	model = "Firefly RK3566-ROC-PC HDMI(Linux)";
-    compatible = "rockchip,rk3566-firefly-roc-pc", "rockchip,rk3566";
+	compatible = "firefly,rk3566-roc-pc", "rockchip,rk3566";
 
 	audiopwmout_diff: audiopwmout-diff {
 		status = "disabled";

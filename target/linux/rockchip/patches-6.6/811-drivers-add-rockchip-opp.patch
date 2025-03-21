@@ -1,0 +1,37 @@
+From 2e7f97d4228b45b6be6895490b9bbeb67a952c14 Mon Sep 17 00:00:00 2001
+From: jjm2473 <jjm2473@gmail.com>
+Date: Fri, 21 Mar 2025 18:09:43 +0800
+Subject: [PATCH] drivers: add rockchip opp
+
+---
+ drivers/soc/rockchip/Kconfig  | 6 ++++++
+ drivers/soc/rockchip/Makefile | 1 +
+ 2 files changed, 7 insertions(+)
+
+diff --git a/drivers/soc/rockchip/Kconfig b/drivers/soc/rockchip/Kconfig
+index aff2f7e95..4ec085435 100644
+--- a/drivers/soc/rockchip/Kconfig
++++ b/drivers/soc/rockchip/Kconfig
+@@ -42,4 +42,10 @@ config ROCKCHIP_DTPM
+ 	  on this platform. That will create all the power capping capable
+ 	  devices.
+ 
++config ROCKCHIP_OPP
++	tristate "Rockchip OPP select support"
++	depends on PM_DEVFREQ
++	help
++	  Say y here to enable rockchip OPP support.
++
+ endif
+diff --git a/drivers/soc/rockchip/Makefile b/drivers/soc/rockchip/Makefile
+index 23d414433..7fa6f324d 100644
+--- a/drivers/soc/rockchip/Makefile
++++ b/drivers/soc/rockchip/Makefile
+@@ -5,3 +5,4 @@
+ obj-$(CONFIG_ROCKCHIP_GRF) += grf.o
+ obj-$(CONFIG_ROCKCHIP_IODOMAIN) += io-domain.o
+ obj-$(CONFIG_ROCKCHIP_DTPM) += dtpm.o
++obj-$(CONFIG_ROCKCHIP_OPP) += rockchip_opp_select.o
+-- 
+2.46.0
+

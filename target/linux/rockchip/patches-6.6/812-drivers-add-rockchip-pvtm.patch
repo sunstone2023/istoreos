@@ -1,0 +1,39 @@
+From ea097df4006ad966e37db6205dc97346e1432748 Mon Sep 17 00:00:00 2001
+From: jjm2473 <jjm2473@gmail.com>
+Date: Fri, 21 Mar 2025 18:10:15 +0800
+Subject: [PATCH] drivers: add rockchip pvtm
+
+---
+ drivers/soc/rockchip/Kconfig  | 8 ++++++++
+ drivers/soc/rockchip/Makefile | 1 +
+ 2 files changed, 9 insertions(+)
+
+diff --git a/drivers/soc/rockchip/Kconfig b/drivers/soc/rockchip/Kconfig
+index 4ec085435..152f241f2 100644
+--- a/drivers/soc/rockchip/Kconfig
++++ b/drivers/soc/rockchip/Kconfig
+@@ -48,4 +48,12 @@ config ROCKCHIP_OPP
+ 	help
+ 	  Say y here to enable rockchip OPP support.
+ 
++config ROCKCHIP_PVTM
++	tristate "Rockchip PVTM support"
++	help
++	  Say y here to enable pvtm support.
++	  The Process-Voltage-Temperature Monitor (PVTM) is used to monitor
++	  the chip performance variance caused by chip process, voltage and
++	  temperature.
++
+ endif
+diff --git a/drivers/soc/rockchip/Makefile b/drivers/soc/rockchip/Makefile
+index 7fa6f324d..c1340db95 100644
+--- a/drivers/soc/rockchip/Makefile
++++ b/drivers/soc/rockchip/Makefile
+@@ -6,3 +6,4 @@ obj-$(CONFIG_ROCKCHIP_GRF) += grf.o
+ obj-$(CONFIG_ROCKCHIP_IODOMAIN) += io-domain.o
+ obj-$(CONFIG_ROCKCHIP_DTPM) += dtpm.o
+ obj-$(CONFIG_ROCKCHIP_OPP) += rockchip_opp_select.o
++obj-$(CONFIG_ROCKCHIP_PVTM) += rockchip_pvtm.o
+-- 
+2.46.0
+

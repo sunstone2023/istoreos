@@ -108,6 +108,7 @@ ifdef BUILD_MALI_BIFROST
 
 endif
 
+ifeq ($(BUILD_VARIANT),normal)
 ifdef CONFIG_PACKAGE_kmod-rkgpu-mali400
   config-m += MALI400
   config-y += MALI450 \
@@ -117,6 +118,7 @@ ifdef CONFIG_PACKAGE_kmod-rkgpu-mali400
 	MALI_DT \
 	MALI_DEVFREQ \
 	
+endif
 endif
 
 EXTRA_CFLAGS:=-I$(PKG_BUILD_DIR)/include -DBUILD_OPENWRT

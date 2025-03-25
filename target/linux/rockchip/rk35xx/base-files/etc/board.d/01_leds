@@ -49,6 +49,11 @@ hlink,h28k)
 	ucidef_set_led_netdev "wan" "WAN" "yellow:led3" "eth1"
 	ucidef_set_led_netdev "lan" "LAN" "blue:led4" "eth0"
 	;;
+klan,nas101|\
+klan,nas102)
+	ucidef_set_led_netdev "net_fail" "NET-FAIL" "red:net-fail" "eth0" "link"
+	ucidef_set_led_netdev "net_ok" "NET-OK" "green:net-ok" "eth0" "link"
+	;;
 linkfog,ala2)
 	ucidef_set_led_timer "sys" "sys" "green:sys" "200" "800"
 	;;

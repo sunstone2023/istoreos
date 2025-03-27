@@ -1,0 +1,8 @@
+/dts-v1/;
+
+#include <rockchip/rk3568-nanopi-r5c.dts>
+#include "rk3568-ip.dtsi"
+#include "rk3568-ip-rk809.dtsi"
+
+/ {
+};

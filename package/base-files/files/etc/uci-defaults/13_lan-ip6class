@@ -1,0 +1,14 @@
+
+[ "$(uci -q get network.lan)" = "interface" ] || exit 0
+[ -z "$(uci -q get network.lan.gateway)" ] || exit 0
+[ "$(uci -q get network.wan.proto)" = "dhcp" ] || exit 0
+[ "$(uci -q get network.wan6)" = "interface" ] || exit 0
+
+uci -q batch <<-EOF >/dev/null
+	delete network.lan.ip6class
+	add_list network.lan.ip6class='wan6'
+	commit network
+EOF
+
+exit 0
+

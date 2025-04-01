@@ -157,7 +157,7 @@
 	};
 
 	rknpu_mmu: iommu@fde4b000 {
-		compatible = "rockchip,iommu-v2";
+		compatible = "rockchip,rk3568-iommu", "rockchip,iommu-v2";
 		reg = <0x0 0xfde4b000 0x0 0x40>;
 		interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
 		interrupt-names = "rknpu_mmu";

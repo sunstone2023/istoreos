@@ -55,7 +55,7 @@
 	};
 
 	vdpu_mmu: iommu@fdea0800 {
-		compatible = "rockchip,iommu-v2";
+		compatible = "rockchip,rk3568-iommu", "rockchip,iommu-v2";
 		reg = <0x0 0xfdea0800 0x0 0x40>;
 		interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
 		interrupt-names = "vdpu_mmu";
@@ -94,7 +94,7 @@
 	};
 
 	jpegd_mmu: iommu@fded0480 {
-		compatible = "rockchip,iommu-v2";
+		compatible = "rockchip,rk3568-iommu", "rockchip,iommu-v2";
 		reg = <0x0 0xfded0480 0x0 0x40>;
 		interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
 		interrupt-names = "jpegd_mmu";
@@ -123,7 +123,7 @@
 	};
 
 	vepu_mmu: iommu@fdee0800 {
-		compatible = "rockchip,iommu-v2";
+		compatible = "rockchip,rk3568-iommu", "rockchip,iommu-v2";
 		reg = <0x0 0xfdee0800 0x0 0x40>;
 		interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
 		interrupt-names = "vepu_mmu";
@@ -152,7 +152,7 @@
 	};
 
 	iep_mmu: iommu@fdef0800 {
-		compatible = "rockchip,iommu-v2";
+		compatible = "rockchip,rk3568-iommu", "rockchip,iommu-v2";
 		reg = <0x0 0xfdef0800 0x0 0x100>;
 		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
 		interrupt-names = "iep_mmu";
@@ -217,7 +217,7 @@
 	};
 
 	rkvenc_mmu: iommu@fdf40f00 {
-		compatible = "rockchip,iommu-v2";
+		compatible = "rockchip,rk3568-iommu", "rockchip,iommu-v2";
 		reg = <0x0 0xfdf40f00 0x0 0x40>, <0x0 0xfdf40f40 0x0 0x40>;
 		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
 			<GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
@@ -298,7 +298,7 @@
 	};
 
 	rkvdec_mmu: iommu@fdf80800 {
-		compatible = "rockchip,iommu-v2";
+		compatible = "rockchip,rk3568-iommu", "rockchip,iommu-v2";
 		reg = <0x0 0xfdf80800 0x0 0x40>, <0x0 0xfdf80840 0x0 0x40>;
 		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
 		interrupt-names = "rkvdec_mmu";

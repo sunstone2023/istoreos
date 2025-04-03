@@ -4,6 +4,7 @@ define Device/Legacy/rk3568
 $(call Device/Legacy,$(1))
   SOC := rk3568
   UBOOT_DEVICE_NAME := easepi-rk3568
+  BOOT_SCRIPT := rk3568
   DEVICE_PACKAGES := kmod-rga3 kmod-rk_vcodec kmod-rkgpu-bifrost kmod-rknpu
 endef
 
@@ -48,6 +49,7 @@ define Device/Legacy/rk3588
 $(call Device/Legacy,$(1))
   SOC := rk3588
   UBOOT_DEVICE_NAME := easepi-rk3588
+  BOOT_SCRIPT := rk3588
   DEVICE_PACKAGES := kmod-rga3 kmod-rk_vcodec kmod-rkgpu-bifrost-csf-coex kmod-rknpu
 endef
 

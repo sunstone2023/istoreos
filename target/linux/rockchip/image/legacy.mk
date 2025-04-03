@@ -22,7 +22,7 @@ $(call Device/Legacy/rk3568,$(1))
   SUPPORTED_DEVICES += fastrhino,r66s fastrhino,r68s
   DEVICE_DTS := rk3568/rk3568-fastrhino-r66s rk3568/rk3568-fastrhino-r68s
   BOOT_SCRIPT := rk3568-fastrhino
-  DEVICE_PACKAGES := kmod-r8169
+  DEVICE_PACKAGES += kmod-r8169
 endef
 TARGET_DEVICES += fastrhino_r6xs
 
@@ -30,7 +30,7 @@ define Device/friendlyarm_nanopi-r5c
 $(call Device/Legacy/rk3568,$(1))
   DEVICE_VENDOR := FriendlyARM
   DEVICE_MODEL := NanoPi R5C
-  DEVICE_PACKAGES := kmod-r8169 kmod-rtw88-8822ce rtl8822ce-firmware wpad-basic-mbedtls
+  DEVICE_PACKAGES += kmod-r8169 kmod-rtw88-8822ce rtl8822ce-firmware wpad-basic-mbedtls
 endef
 
 define Device/friendlyarm_nanopi-r5s
@@ -75,5 +75,5 @@ define Device/friendlyarm_nanopi-r6c
 $(call Device/Legacy/rk3588s,$(1))
   DEVICE_VENDOR := FriendlyARM
   DEVICE_MODEL := NanoPi R6C
-  DEVICE_PACKAGES := kmod-r8169
+  DEVICE_PACKAGES += kmod-r8169
 endef

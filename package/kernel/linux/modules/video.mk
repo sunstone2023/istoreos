@@ -620,7 +620,7 @@ $(eval $(call KernelPackage,drm-radeon))
 define KernelPackage/drm-udl
   SUBMENU:=$(VIDEO_MENU)
   TITLE:=DisplayLink
-  DEPENDS:=+kmod-drm +kmod-backlight +kmod-drm-kms-helper
+  DEPENDS:=+kmod-drm +kmod-backlight +kmod-drm-kms-helper +kmod-drm-shmem-helper
   KCONFIG:=CONFIG_DRM_UDL
   FILES:=$(LINUX_DIR)/drivers/gpu/drm/udl/udl.ko
   AUTOLOAD:=$(call AutoProbe,udl)
@@ -632,6 +632,25 @@ define KernelPackage/drm-udl/description
 endef
 
 $(eval $(call KernelPackage,drm-udl))
+
+
+define KernelPackage/drm-shmem-helper
+  SUBMENU:=$(VIDEO_MENU)
+  HIDDEN:=1
+  TITLE:=GEM shmem helper
+  DEPENDS:=+kmod-drm
+  KCONFIG:= \
+    CONFIG_DRM_GEM_SHMEM_HELPER
+  FILES:=$(LINUX_DIR)/drivers/gpu/drm/drm_shmem_helper.ko
+  AUTOLOAD:=$(call AutoProbe,drm_shmem_helper)
+endef
+
+define KernelPackage/drm-shmem-helper/description
+  GEM shmem helper
+endef
+
+$(eval $(call KernelPackage,drm-shmem-helper))
+
 
 #
 # Video Capture

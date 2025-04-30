@@ -47,15 +47,19 @@ platform_do_upgrade() {
 	sync
 
 	if [ "$UPGRADE_OPT_SAVE_PARTITIONS" = "1" -o -n "$UPGRADE_BACKUP" ]; then
-		get_partitions "/dev/$diskdev" bootdisk
+		[ -n "$UPGRADE_BACKUP" ] || get_partitions "/dev/$diskdev" bootdisk
 
 		#extract the boot sector from the image
 		get_image "$@" | dd of=/tmp/image.bs count=1 bs=512b
 
 		get_partitions /tmp/image.bs image
-
-		#compare tables
-		diff="$(grep -F -x -v -f /tmp/partmap.bootdisk /tmp/partmap.image)"
+		if [ -n "$UPGRADE_BACKUP" ]; then
+			#keep overlay partition when upgrade
+			diff=
+		else
+			#compare tables
+			diff="$(grep -F -x -v -f /tmp/partmap.bootdisk /tmp/partmap.image)"
+		fi
 	else
 		diff=1
 	fi

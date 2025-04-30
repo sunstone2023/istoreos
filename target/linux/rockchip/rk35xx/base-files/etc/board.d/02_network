@@ -95,6 +95,15 @@ generate_mac_from_mmc()
 	echo "$(macaddr_unsetbit_mc "$(macaddr_setbit_la "${mac_base}")")"
 }
 
+read_vendor_mac()
+{
+	if [ -f /proc/device-tree/chosen/has-vendor-mac -a -x /usr/sbin/vendorStorage ]; then
+		/usr/sbin/vendorStorage readMac
+		return 0
+	fi
+	return 1
+}
+
 rockchip_setup_macs()
 {
 	local board="$1"
@@ -146,7 +155,8 @@ rockchip_setup_macs()
 		lan_mac=$(macaddr_add "$wan_mac" 1)
 		;;
 	*)
-		lan_mac=$(generate_mac_from_mmc)
+		lan_mac=$(read_vendor_mac)
+		[ -n "$lan_mac" ] || lan_mac=$(generate_mac_from_mmc)
 		;;
 	esac
 

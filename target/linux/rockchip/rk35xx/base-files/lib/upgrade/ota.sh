@@ -11,41 +11,41 @@ export_ota_url() {
 	radxa,e54c|\
 	easepi,ars4|\
 	lyt,t68m)
-		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/${board##*,}"
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS-22.03/${board##*,}"
 		;;
 	easepi,r1)
-		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/easepi-r1"
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS-22.03/easepi-r1"
 		;;
 	easepi,r1-lite)
-		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/easepi-r1-lite"
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS-22.03/easepi-r1-lite"
 		;;
 	fastrhino,r66s|\
 	fastrhino,r68s)
-		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/r6xs"
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS-22.03/r6xs"
 		;;
 	friendlyelec,nanopi-r3s)
-		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/r3s"
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS-22.03/r3s"
 		;;
 	friendlyelec,nanopi-r5c|\
 	friendlyelec,nanopi-r5s-c1|\
 	friendlyelec,nanopi-r5s)
-		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/r5s"
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS-22.03/r5s"
 		;;
 	friendlyelec,nanopi-r6s|\
 	friendlyelec,nanopi-r6c)
-		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/r6s"
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS-22.03/r6s"
 		;;
 	firefly,rk3568-roc-pc)
-		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/station-p2"
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS-22.03/station-p2"
 		;;
 	hinlink,opc-h66k|\
 	hinlink,opc-h68k|\
 	hinlink,opc-h69k)
-		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/h6xk"
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS-22.03/h6xk"
 		;;
 	hinlink,h88k-*|\
 	hinlink,h88k)
-		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/h88k"
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS-22.03/h88k"
 		;;
 	*)
 		return 1

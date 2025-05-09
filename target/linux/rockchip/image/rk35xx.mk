@@ -205,7 +205,7 @@ TARGET_DEVICES += friendlyarm_nanopi-r5s
 define Device/firefly_station-p2
 $(call Device/rk3568)
   DEVICE_VENDOR := Firefly
-  DEVICE_MODEL := Station P2 / ROC PC
+  DEVICE_MODEL := Station P2 / RK3568 ROC PC
   DEVICE_DTS := rk3568-firefly-roc-pc
   SUPPORTED_DEVICES += firefly,rk3568-roc-pc firefly,station-p2
   DEVICE_PACKAGES := kmod-r8125 kmod-nvme kmod-scsi-core
@@ -398,7 +398,7 @@ TARGET_DEVICES += panther_x2
 define Device/firefly_station-m2
 $(call Device/rk3566)
   DEVICE_VENDOR := Firefly
-  DEVICE_MODEL := Station M2 / ROC PC
+  DEVICE_MODEL := Station M2 / RK3566 ROC PC
   DEVICE_DTS := rk3566-firefly-roc-pc
   SUPPORTED_DEVICES += rockchip,rk3566-firefly-roc-pc firefly,rk3566-roc-pc firefly,station-m2
   DEVICE_PACKAGES := kmod-nvme kmod-scsi-core

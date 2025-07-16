@@ -10,7 +10,20 @@ env delete adc_value
 adc single saradc@fe720000 1 adc_value
 
 if test -n "$adc_value"; then
-    if test "$adc_value" -ge 478; then
+    # R5S: 81 / 1024 * 1800000 = 142382.8125
+    if test "$adc_value" -ge 1024; then
+        # uboot 2024.10
+        if test "$adc_value" -ge 840234; then
+            echo board rev07
+            setenv hwrev 11
+        elif test "$adc_value" -ge 602929; then
+            echo board rev05
+            setenv hwrev 10
+        elif test "$adc_value" -ge 265429; then
+            echo board rev02
+            setenv hwrev 1
+        fi
+    elif test "$adc_value" -ge 478; then
         echo board rev07
         setenv hwrev 11
     elif test "$adc_value" -ge 343; then

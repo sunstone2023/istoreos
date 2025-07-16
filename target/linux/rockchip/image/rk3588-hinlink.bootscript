@@ -12,6 +12,16 @@ if test -n "$adc_value"; then
         echo adc $adc_value : board v3
         setenv hwrev 1
     fi
+else
+    # uboot 2024.10
+    adc single adc@fec10000 5 adc_value
+    if test -n "$adc_value"; then
+        # 600/4096 * 1800000
+        if test "$adc_value" -ge 263672; then
+            echo adc $adc_value : board v3
+            setenv hwrev 1
+        fi
+    fi
 fi
 
 # reset USB modem
